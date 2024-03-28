@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whizzy Wheels - Waiting</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Waiting for the next race...</h1>
+        <% if (error) { %>
+            <p id="status"><%= error %></p>
+        <% } else { %>
+            <p id="status">There is currently no active race. Please wait for the next one to start.</p>
+        <% } %>
+        <button id="joinRaceBtn" style="display: none;">Join Race</button>
+    </div>
+
+    <script>
+        // Fonction pour effectuer une requête AJAX périodique toutes les 5 secondes
+        function checkForRace() {
+            setInterval(() => {
+                // Effectuer une requête AJAX vers le serveur pour vérifier l'état de la course
+                fetch('/api/current-race')
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.active) {
+                        // S'il y a une course active, afficher un bouton pour rejoindre la course
+                        document.getElementById('status').innerText = 'A race is currently active!';
+                        document.getElementById('joinRaceBtn').style.display = 'block';
+                    } else {
+                        // S'il n'y a pas de course active, afficher un message d'attente
+                        document.getElementById('status').innerText = 'There is currently no active race. Please wait for the next one to start.';
+                        document.getElementById('joinRaceBtn').style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking for race:', error);
+                });
+            }, 1000); // Vérifier toutes les 5 secondes
+        }
+
+        // Appeler la fonction au chargement de la page
+        window.onload = checkForRace;
+
+        // Fonction pour rejoindre la course
+        document.getElementById('joinRaceBtn').addEventListener('click', function() {
+            window.location.href = '/race'; // Rediriger vers la page de la course
+        });
+    </script>
+</body>
+</html>

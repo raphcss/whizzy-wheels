@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whizzy Wheels - Race</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <h1>Place your bets!</h1>
+    <% if (currentRace && currentRace.winners) { %>
+        <h2>Current Race</h2>
+        <p>Status: Active</p>
+        <p>Winners: <%= currentRace.winners.join(', ') %></p>
+    <% } else { %>
+        <h2>No Active Race</h2>
+        <p>There is no active race at the moment.</p>
+    <% } %>
+    
+    <h2>Available Cars</h2>
+    <p>Here are the cars available for betting:</p>
+    <ul>
+        <% if (cars && cars.length > 0) { %>
+            <% cars.forEach((car, index) => { %>
+                <li>Car <%= car.name %> (Speed: <%= car.speed %>)
+                    <button onclick="placeBet('<%= car._id %>')">Bet on this car</button>
+                </li>
+            <% }); %>
+        <% } else { %>
+            <li>No cars available</li>
+        <% } %>
+    </ul>
+
+    <form id="betForm" style="display: none;" method="POST" action="/place_bet">
+        <input type="hidden" name="carId" id="carIdInput">
+        <input type="hidden" name="raceId" value="<%= currentRace._id %>">
+        <label for="amount">Enter the amount of your bet (€):</label>
+        <input type="number" name="amount" id="amount" min="2">
+        <button type="submit">Place Bet</button>
+    </form>
+    
+
+    <script>
+        function placeBet(carId) {
+            document.getElementById('carIdInput').value = carId;
+            document.getElementById('betForm').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
