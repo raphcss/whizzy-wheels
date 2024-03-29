@@ -36,8 +36,8 @@ app.use(passport.session());
 
 // Configuration de la stratégie d'authentification Discord
 passport.use(new DiscordStrategy({
-  clientID: '1222791024578003054',
-  clientSecret: 'Zc6njLqNfRGQOMS2sGIzgCb6Ko8esrf5',
+  clientID: '',
+  clientSecret: '',
   callbackURL: 'http://localhost:3000/auth/discord/callback',
   scope: ['identify', 'guilds', 'email'],
 }, async (accessToken, refreshToken, profile, done) => {
